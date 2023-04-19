@@ -94,6 +94,34 @@ std::set<std::string> boggle(const std::set<std::string>& dict, const std::set<s
 bool boggleHelper(const std::set<std::string>& dict, const std::set<std::string>& prefix, const std::vector<std::vector<char> >& board, 
 								   std::string word, std::set<std::string>& result, unsigned int r, unsigned int c, int dr, int dc)
 {
-//add your solution here!
-
+	//add your solution here!
+	if(r >= 0 && r < board.size() && c >= 0 && c < board[0].size()) {
+		word.push_back(board[r][c]);
+	}
+	else {
+		if(dict.find(word) != dict.end()) {
+			result.insert(word);
+			return true;
+		}
+		return false;
+	}
+	// if prefix does not have word but dict has it, then insert and return true
+	if(prefix.find(word) == prefix.end() && dict.find(word) != dict.end()) {
+		result.insert(word);
+		return true;
+	}
+	// if both dict and prefix do not have word, then return false
+	if(prefix.find(word) == prefix.end() && dict.find(word) == dict.end()) {
+		return false;
+	}
+	// if both dict and prefix have word, then we first check the next location but regardless we should return true
+	if(prefix.find(word) != prefix.end() && dict.find(word) != dict.end()) {
+		if(boggleHelper(dict, prefix, board, word, result, r + dr, c + dc, dr, dc) == false) {
+			result.insert(word);
+			return true; 
+		}
+		return true;
+	}
+	// recurse
+	return boggleHelper(dict, prefix, board, word, result, r + dr, c + dc, dr, dc);
 }
